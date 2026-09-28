@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAF House - Calculadora de Costos de Pastelería</title>
+    <!-- Fuentes elegantes (Playfair Display y Montserrat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --card-bg: #ffffff;
+            --text-color: #2c2c2c;
+            --accent-color: #c5a059; /* Tono delicado/dorado suave */
+            --border-color: #e5e3db;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-weight: 500;
+            color: #555;
+            background-color: #fcfbf9;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            background-color: var(--text-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .totals {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fcfbf9;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .totals p {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+        }
+
+        .totals p.final {
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--accent-color);
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>LAF House</h1>
+        <div class="subtitle">Calculadora de Costos de Pâtisserie</div>
+
+        <table id="costTable">
+            <thead>
+                <tr>
+                    <th>Ingrediente / Insumo</th>
+                    <th>Cantidad / Unidad</th>
+                    <th>Costo ($)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" value="Harina 0000"></td>
+                    <td><input type="text" value="1 kg"></td>
+                    <td><input type="number" class="cost-input" value="1200" oninput="calcularTotales()"></td>
+                    <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
+                </tr>
+                <tr>
+                    <td><input type="text" value="Manteca"></td>
+                    <td><input type="text" value="500 g"></td>
+                    <td><input type="number" class="cost-input" value="3500" oninput="calcularTotales()"></td>
+                    <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="actions">
+            <button type="button" class="btn" onclick="agregarFila()">+ Agregar Insumo</button>
+        </div>
+
+        <div class="totals">
+            <p><span>Costo Total de Ingredientes:</span> <span id="totalInsumos">$0.00</span></p>
+            <p><span>Margen de Ganancia / Gastos Extras (40%):</span> <span id="extraCost">$0.00</span></p>
+            <p class="final"><span>Precio Sugerido de Venta:</span> <span id="precioSugerido">$0.00</span></p>
+        </div>
+    </div>
+
+    <script>
+        function agregarFila() {
+            const tbody = document.querySelector('#costTable tbody');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="text" placeholder="Nuevo ingrediente"></td>
+                <td><input type="text" placeholder="Cantidad"></td>
+                <td><input type="number" class="cost-input" value="0" oninput="calcularTotales()"></td>
+                <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(nuevaFila);
+            calcularTotales();
+        }
+
+        function eliminarFila(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            const inputs = document.querySelectorAll('.cost-input');
+            let total = 0;
+            inputs.forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                total += val;
+            });
+
+            const extra = total * 0.40; // 40% estimado de margen/extras
+            const sugerido = total + extra;
+
+            document.getElementById('totalInsumos').innerText = `$${total.toFixed(2)}`;
+            document.getElementById('extraCost').innerText = `$${extra.toFixed(2)}`;
+            document.getElementById('precioSugerido').innerText = `$${sugerido.toFixed(2)}`;
+        }
+
+        // Calcular al cargar
+        calcularTotales();
+    </script>
+
+</body>
+</html>
