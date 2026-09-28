@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAF House - Calculadora de Costos de Pastelería</title>
-    <!-- Fuentes elegantes (Playfair Display y Montserrat) -->
+    <title>LAF House - Calculadora Pro con Lista Maestra</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #faf9f6;
             --card-bg: #ffffff;
             --text-color: #2c2c2c;
-            --accent-color: #c5a059; /* Tono delicado/dorado suave */
+            --accent-color: #c5a059;
             --border-color: #e5e3db;
+            --danger-color: #d9534f;
         }
-
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
@@ -22,9 +21,8 @@
             margin: 0;
             padding: 20px;
         }
-
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--card-bg);
             padding: 30px;
@@ -32,106 +30,107 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             border: 1px solid var(--border-color);
         }
-
-        h1, h2 {
+        h1, h2, h3 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
-            text-align: center;
             color: var(--text-color);
         }
-
-        h1 {
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
+        h1 { text-align: center; margin-bottom: 5px; letter-spacing: 1px; }
         .subtitle {
             text-align: center;
             font-size: 0.9rem;
             color: #777;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
+        .section-box {
+            background-color: #fcfbf9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         th, td {
-            padding: 12px;
+            padding: 8px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
-
-        th {
-            font-weight: 500;
-            color: #555;
-            background-color: #fcfbf9;
-        }
-
-        input[type="text"], input[type="number"] {
+        th { font-weight: 500; color: #555; background-color: #f5f3ec; }
+        input[type="text"], input[type="number"], select {
             width: 100%;
-            padding: 8px 10px;
+            padding: 8px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             box-sizing: border-box;
         }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-color);
+        input:focus, select:focus { outline: none; border-color: var(--accent-color); }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
-
         .btn {
             background-color: var(--text-color);
             color: #fff;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 6px;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             transition: background 0.2s;
         }
-
-        .btn:hover {
-            background-color: var(--accent-color);
-        }
-
+        .btn:hover { background-color: var(--accent-color); }
+        .btn-danger { background-color: var(--danger-color); color: white; }
         .actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
-
         .totals {
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 20px;
-            background-color: #fcfbf9;
+            background-color: #f5f3ec;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
-
         .totals p {
-            margin: 8px 0;
+            margin: 6px 0;
             display: flex;
             justify-content: space-between;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-
         .totals p.final {
             font-weight: 600;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             color: var(--accent-color);
             border-top: 1px solid var(--border-color);
             padding-top: 10px;
+            margin-top: 10px;
+        }
+        .saved-section {
+            margin-top: 30px;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -139,82 +138,409 @@
 
     <div class="container">
         <h1>LAF House</h1>
-        <div class="subtitle">Calculadora de Costos de Pâtisserie</div>
+        <div class="subtitle">Calculadora Integral con Lista Maestra</div>
 
-        <table id="costTable">
-            <thead>
-                <tr>
-                    <th>Ingrediente / Insumo</th>
-                    <th>Cantidad / Unidad</th>
-                    <th>Costo ($)</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="text" value="Harina 0000"></td>
-                    <td><input type="text" value="1 kg"></td>
-                    <td><input type="number" class="cost-input" value="1200" oninput="calcularTotales()"></td>
-                    <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
-                </tr>
-                <tr>
-                    <td><input type="text" value="Manteca"></td>
-                    <td><input type="text" value="500 g"></td>
-                    <td><input type="number" class="cost-input" value="3500" oninput="calcularTotales()"></td>
-                    <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="actions">
-            <button type="button" class="btn" onclick="agregarFila()">+ Agregar Insumo</button>
+        <!-- 1. LISTA MAESTRA DE INSUMOS -->
+        <div class="section-box" style="border-color: var(--accent-color);">
+            <h3 style="margin-top: 0; color: var(--accent-color);">📋 Lista Maestra de Insumos (Precios Generales)</h3>
+            <p style="font-size: 0.8rem; color: #666; margin-top: -5px;">Actualiza aquí el precio de tus materias primas. Se actualizarán en todas tus recetas.</p>
+            <table id="masterTable">
+                <thead>
+                    <tr>
+                        <th>Insumo / Ingrediente</th>
+                        <th>Unidad Base (kg, lt, un)</th>
+                        <th>Precio ($)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+            <button type="button" class="btn" onclick="agregarInsumoMaestro()">+ Agregar Insumo a la Lista</button>
         </div>
 
+        <!-- 2. IDENTIFICACIÓN DE LA RECETA -->
+        <div class="recipe-name-box" style="margin-bottom: 20px;">
+            <label for="recipeName">Nombre de la Preparación / Producto:</label>
+            <input type="text" id="recipeName" placeholder="Ej: Torta Chocotorta, Budín de Limón...">
+        </div>
+
+        <!-- 3. INGREDIENTES DE LA RECETA -->
+        <div class="section-box">
+            <h3>1. Ingredientes Usados en la Receta</h3>
+            <table id="recipeTable">
+                <thead>
+                    <tr>
+                        <th>Seleccionar Insumo</th>
+                        <th>Cant. Usada (ej: 250g, 3 un)</th>
+                        <th>Costo Calculado ($)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+            <button type="button" class="btn" onclick="agregarFilaReceta()">+ Agregar Ingrediente a la Receta</button>
+        </div>
+
+        <!-- 4. PACKAGING -->
+        <div class="section-box">
+            <h3>2. Packaging y Presentación</h3>
+            <table id="packTable">
+                <thead>
+                    <tr>
+                        <th>Elemento (Caja, Sticker, Cintas...)</th>
+                        <th>Costo ($)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+            <button type="button" class="btn" onclick="agregarPackaging()">+ Agregar Packaging</button>
+        </div>
+
+        <!-- 5. MANO DE OBRA Y GASTOS FIJOS -->
+        <div class="section-box">
+            <h3>3. Tiempos, Mano de Obra y Gastos Fijos</h3>
+            <div class="grid-2">
+                <div>
+                    <label for="horasTrabajo">Tiempo de elaboración (Horas):</label>
+                    <input type="number" id="horasTrabajo" value="1.5" step="0.1" oninput="calcularTotales()">
+                </div>
+                <div>
+                    <label for="valorHora">Valor de tu hora de trabajo ($):</label>
+                    <input type="number" id="valorHora" value="3000" oninput="calcularTotales()">
+                </div>
+            </div>
+            <div style="margin-top: 15px;" class="grid-2">
+                <div>
+                    <label for="gastosMes">Gastos Fijos Mensuales Totales ($):</label>
+                    <input type="number" id="gastosMes" value="50000" placeholder="Alquiler, servicios..." oninput="calcularTotales()">
+                </div>
+                <div>
+                    <label for="produccionMes">Producción estimada al mes (Unidades):</label>
+                    <input type="number" id="produccionMes" value="100" placeholder="Ej: 100 productos al mes" oninput="calcularTotales()">
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="actions">
+            <button type="button" class="btn" style="background-color: var(--accent-color); flex: 1;" onclick="guardarReceta()">💾 Guardar Receta</button>
+            <button type="button" class="btn" onclick="limpiarFormulario()">🧹 Nueva Receta</button>
+        </div>
+
+        <!-- RESULTADOS Y TOTALES -->
         <div class="totals">
-            <p><span>Costo Total de Ingredientes:</span> <span id="totalInsumos">$0.00</span></p>
-            <p><span>Margen de Ganancia / Gastos Extras (40%):</span> <span id="extraCost">$0.00</span></p>
+            <p><span>Costo de Materia Prima:</span> <span id="totalInsumos">$0.00</span></p>
+            <p><span>Costo de Packaging:</span> <span id="totalPackaging">$0.00</span></p>
+            <p><span>Mano de Obra (Tu Tiempo):</span> <span id="totalManoObra">$0.00</span></p>
+            <p><span>Proporción de Gastos Fijos:</span> <span id="totalGastosFijos">$0.00</span></p>
+            <p style="font-weight: 500; border-top: 1px solid var(--border-color); padding-top: 8px;"><span>Costo Total de Producción:</span> <span id="costoTotalPuro">$0.00</span></p>
+            <p><span>Margen de Ganancia Extra (40%):</span> <span id="extraGanancia">$0.00</span></p>
             <p class="final"><span>Precio Sugerido de Venta:</span> <span id="precioSugerido">$0.00</span></p>
+        </div>
+
+        <!-- SECCIÓN DE RECETAS GUARDADAS -->
+        <div class="saved-section">
+            <h2>Recetas Guardadas en el iPad</h2>
+            <select id="savedRecipesSelect" onchange="cargarRecetaSeleccionada()">
+                <option value="">-- Selecciona una receta guardada --</option>
+            </select>
+            <div style="margin-top: 10px;">
+                <button type="button" class="btn btn-danger" onclick="borrarRecetaSeleccionada()">🗑️ Eliminar Receta Seleccionada</button>
+            </div>
         </div>
     </div>
 
     <script>
-        function agregarFila() {
-            const tbody = document.querySelector('#costTable tbody');
-            const nuevaFila = document.createElement('tr');
-            nuevaFila.innerHTML = `
-                <td><input type="text" placeholder="Nuevo ingrediente"></td>
-                <td><input type="text" placeholder="Cantidad"></td>
-                <td><input type="number" class="cost-input" value="0" oninput="calcularTotales()"></td>
-                <td><button type="button" class="btn" style="padding: 5px 10px; background:#e74c3c;" onclick="eliminarFila(this)">X</button></td>
+        // Datos iniciales por defecto si la lista maestra está vacía
+        let masterInsumosDefault = [
+            { nombre: "Harina 0000", unidad: "1 kg", precio: 1200 },
+            { nombre: "Manteca", unidad: "500 g", precio: 3500 },
+            { nombre: "Azúcar", unidad: "1 kg", precio: 1000 },
+            { nombre: "Huevos", unidad: "1 docena", precio: 2400 }
+        ];
+
+        function obtenerMaster() {
+            let guardado = localStorage.getItem('laf_master_insumos');
+            if (!guardado) {
+                localStorage.setItem('laf_master_insumos', JSON.stringify(masterInsumosDefault));
+                return masterInsumosDefault;
+            }
+            return JSON.parse(guardado);
+        }
+
+        function guardarMaster(insumos) {
+            localStorage.setItem('laf_master_insumos', JSON.stringify(insumos));
+            actualizarSelectsInsumos();
+        }
+
+        function renderizarMasterTable() {
+            const tbody = document.querySelector('#masterTable tbody');
+            tbody.innerHTML = '';
+            let insumos = obtenerMaster();
+
+            insumos.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="text" value="${item.nombre}" onchange="actualizarMasterItem(${index}, 'nombre', this.value)"></td>
+                    <td><input type="text" value="${item.unidad}" onchange="actualizarMasterItem(${index}, 'unidad', this.value)"></td>
+                    <td><input type="number" value="${item.precio}" onchange="actualizarMasterItem(${index}, 'precio', this.value)"></td>
+                    <td><button type="button" class="btn btn-danger" style="padding: 4px 8px;" onclick="eliminarMasterItem(${index})">X</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function agregarInsumoMaestro() {
+            let insumos = obtenerMaster();
+            insumos.push({ nombre: "Nuevo Insumo", unidad: "1 kg", precio: 0 });
+            guardarMaster(insumos);
+            renderizarMasterTable();
+        }
+
+        function actualizarMasterItem(index, campo, valor) {
+            let insumos = obtenerMaster();
+            if (campo === 'precio') {
+                insumos[index][campo] = parseFloat(valor) || 0;
+            } else {
+                insumos[index][campo] = valor;
+            }
+            guardarMaster(insumos);
+            calcularTotales();
+        }
+
+        function eliminarMasterItem(index) {
+            let insumos = obtenerMaster();
+            insumos.splice(index, 1);
+            guardarMaster(insumos);
+            renderizarMasterTable();
+            calcularTotales();
+        }
+
+        function actualizarSelectsInsumos() {
+            let insumos = obtenerMaster();
+            const selects = document.querySelectorAll('.select-insumo');
+            selects.forEach(select => {
+                let valorActual = select.value;
+                select.innerHTML = '<option value="">-- Seleccionar insumo --</option>';
+                insumos.forEach(item => {
+                    let opt = document.createElement('option');
+                    opt.value = item.nombre;
+                    opt.textContent = `${item.nombre} (${item.unidad} - $${item.precio})`;
+                    if (item.nombre === valorActual) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function agregarFilaReceta(insumoSeleccionado = '', cantidadUsada = '', costoManual = '') {
+            const tbody = document.querySelector('#recipeTable tbody');
+            const tr = document.createElement('tr');
+            
+            let insumos = obtenerMaster();
+            let optionsHTML = '<option value="">-- Seleccionar insumo --</option>';
+            insumos.forEach(item => {
+                let selected = (item.nombre === insumoSeleccionado) ? 'selected' : '';
+                optionsHTML += `<option value="${item.nombre}" ${selected}>${item.nombre} (${item.unidad} - $${item.precio})</option>`;
+            });
+
+            tr.innerHTML = `
+                <td><select class="select-insumo" onchange="calcularTotales()">${optionsHTML}</select></td>
+                <td><input type="text" placeholder="Ej: 250g o 2un" value="${cantidadUsada}" class="ing-cant" oninput="calcularTotales()"></td>
+                <td><input type="number" placeholder="Costo $" value="${costoManual}" class="ing-costo-calc" oninput="calcularTotales()"></td>
+                <td><button type="button" class="btn btn-danger" style="padding: 4px 8px;" onclick="eliminarFila(this)">X</button></td>
             `;
-            tbody.appendChild(nuevaFila);
+            tbody.appendChild(tr);
+            calcularTotales();
+        }
+
+        function agregarPackaging(nombre = '', costo = 0) {
+            const tbody = document.querySelector('#packTable tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" placeholder="Elemento" value="${nombre}" class="pack-name"></td>
+                <td><input type="number" class="pack-cost" value="${costo}" oninput="calcularTotales()"></td>
+                <td><button type="button" class="btn btn-danger" style="padding: 4px 8px;" onclick="eliminarFila(this)">X</button></td>
+            `;
+            tbody.appendChild(tr);
             calcularTotales();
         }
 
         function eliminarFila(btn) {
-            const row = btn.closest('tr');
-            row.remove();
+            btn.closest('tr').remove();
             calcularTotales();
         }
 
         function calcularTotales() {
-            const inputs = document.querySelectorAll('.cost-input');
-            let total = 0;
-            inputs.forEach(input => {
-                const val = parseFloat(input.value) || 0;
-                total += val;
+            let insumosMaster = obtenerMaster();
+            let totalInsumos = 0;
+
+            // Calcular costo de ingredientes basado en la selección (estimación base o manual)
+            document.querySelectorAll('#recipeTable tbody tr').forEach(row => {
+                let nombreInsumo = row.querySelector('.select-insumo').value;
+                let costoInput = row.querySelector('.ing-costo-calc');
+                
+                // Buscar precio en la lista maestra si coincide
+                let encontrado = insumosMaster.find(i => i.nombre === nombreInsumo);
+                if (encontrado && !costoInput.value) {
+                    // Si no puso costo manual, podemos dejarlo en 0 o estimar. Dejamos que carguen el costo proporcional o manual.
+                }
+                totalInsumos += parseFloat(costoInput.value) || 0;
             });
 
-            const extra = total * 0.40; // 40% estimado de margen/extras
-            const sugerido = total + extra;
+            let totalPackaging = 0;
+            document.querySelectorAll('.pack-cost').forEach(input => {
+                totalPackaging += parseFloat(input.value) || 0;
+            });
 
-            document.getElementById('totalInsumos').innerText = `$${total.toFixed(2)}`;
-            document.getElementById('extraCost').innerText = `$${extra.toFixed(2)}`;
-            document.getElementById('precioSugerido').innerText = `$${sugerido.toFixed(2)}`;
+            let horas = parseFloat(document.getElementById('horasTrabajo').value) || 0;
+            let valorH = parseFloat(document.getElementById('valorHora').value) || 0;
+            let totalManoObra = horas * valorH;
+
+            let gastosMes = parseFloat(document.getElementById('gastosMes').value) || 0;
+            let produccionMes = parseFloat(document.getElementById('produccionMes').value) || 1;
+            let gastosFijosUnitarios = produccionMes > 0 ? (gastosMes / produccionMes) : 0;
+
+            let costoTotalPuro = totalInsumos + totalPackaging + totalManoObra + gastosFijosUnitarios;
+            let extraGanancia = costoTotalPuro * 0.40;
+            let precioSugerido = costoTotalPuro + extraGanancia;
+
+            document.getElementById('totalInsumos').innerText = `$${totalInsumos.toFixed(2)}`;
+            document.getElementById('totalPackaging').innerText = `$${totalPackaging.toFixed(2)}`;
+            document.getElementById('totalManoObra').innerText = `$${totalManoObra.toFixed(2)}`;
+            document.getElementById('totalGastosFijos').innerText = `$${gastosFijosUnitarios.toFixed(2)}`;
+            document.getElementById('costoTotalPuro').innerText = `$${costoTotalPuro.toFixed(2)}`;
+            document.getElementById('extraGanancia').innerText = `$${extraGanancia.toFixed(2)}`;
+            document.getElementById('precioSugerido').innerText = `$${precioSugerido.toFixed(2)}`;
         }
 
-        // Calcular al cargar
-        calcularTotales();
+        function guardarReceta() {
+            const name = document.getElementById('recipeName').value.trim();
+            if (!name) {
+                alert('Por favor, ingresa un nombre para la preparación.');
+                return;
+            }
+
+            const ingredientes = [];
+            document.querySelectorAll('#recipeTable tbody tr').forEach(row => {
+                ingredientes.push({
+                    insumo: row.querySelector('.select-insumo').value,
+                    cantidad: row.querySelector('.ing-cant').value,
+                    costo: row.querySelector('.ing-costo-calc').value
+                });
+            });
+
+            const packaging = [];
+            document.querySelectorAll('#packTable tbody tr').forEach(row => {
+                packaging.push({
+                    nombre: row.querySelector('.pack-name').value,
+                    costo: row.querySelector('.pack-cost').value
+                });
+            });
+
+            const configExtra = {
+                horas: document.getElementById('horasTrabajo').value,
+                valorHora: document.getElementById('valorHora').value,
+                gastosMes: document.getElementById('gastosMes').value,
+                produccionMes: document.getElementById('produccionMes').value
+            };
+
+            const recetaData = { name, ingredientes, packaging, configExtra };
+            let saved = JSON.parse(localStorage.getItem('laf_recetas_master') || '{}');
+            saved[name] = recetaData;
+            localStorage.setItem('laf_recetas_master', JSON.stringify(saved));
+
+            actualizarListaRecetas();
+            alert('¡Receta guardada con éxito en tu iPad!');
+        }
+
+        function actualizarListaRecetas() {
+            const select = document.getElementById('savedRecipesSelect');
+            select.innerHTML = '<option value="">-- Selecciona una receta guardada --</option>';
+            let saved = JSON.parse(localStorage.getItem('laf_recetas_master') || '{}');
+            for (let name in saved) {
+                let opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            }
+        }
+
+        function cargarRecetaSeleccionada() {
+            const name = document.getElementById('savedRecipesSelect').value;
+            if (!name) return;
+
+            let saved = JSON.parse(localStorage.getItem('laf_recetas_master') || '{}');
+            let receta = saved[name];
+            if (!receta) return;
+
+            document.getElementById('recipeName').value = receta.name;
+            
+            const tbody = document.querySelector('#recipeTable tbody');
+            tbody.innerHTML = '';
+            if (receta.ingredientes) {
+                receta.ingredientes.forEach(ing => {
+                    agregarFilaReceta(ing.insumo, ing.cantidad, ing.costo);
+                });
+            }
+
+            const tbodyPack = document.querySelector('#packTable tbody');
+            tbodyPack.innerHTML = '';
+            if (receta.packaging) {
+                receta.packaging.forEach(pkg => {
+                    agregarPackaging(pkg.nombre, pkg.costo);
+                });
+            }
+
+            if (receta.configExtra) {
+                document.getElementById('horasTrabajo').value = receta.configExtra.horas || 1;
+                document.getElementById('valorHora').value = receta.configExtra.valorHora || 0;
+                document.getElementById('gastosMes').value = receta.configExtra.gastosMes || 0;
+                document.getElementById('produccionMes').value = receta.configExtra.produccionMes || 1;
+            }
+
+            calcularTotales();
+        }
+
+        function borrarRecetaSeleccionada() {
+            const name = document.getElementById('savedRecipesSelect').value;
+            if (!name) {
+                alert('Selecciona una receta para eliminar.');
+                return;
+            }
+            if (confirm(`¿Estás seguro de eliminar la receta "${name}"?`)) {
+                let saved = JSON.parse(localStorage.getItem('laf_recetas_master') || '{}');
+                delete saved[name];
+                localStorage.setItem('laf_recetas_master', JSON.stringify(saved));
+                actualizarListaRecetas();
+                limpiarFormulario();
+            }
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('recipeName').value = '';
+            document.getElementById('recipeTable tbody').innerHTML = '';
+            document.getElementById('packTable tbody').innerHTML = '';
+            agregarFilaReceta('Harina 0000', '250g', '300');
+            agregarPackaging('Caja repostería', 250);
+            calcularTotales();
+        }
+
+        window.onload = function() {
+            renderizarMasterTable();
+            actualizarListaRecetas();
+            if (document.querySelectorAll('#recipeTable tbody tr').length === 0) {
+                agregarFilaReceta('Harina 0000', '250g', '300');
+                agregarPackaging('Caja repostería', 250);
+            }
+            calcularTotales();
+        };
     </script>
 
 </body>
